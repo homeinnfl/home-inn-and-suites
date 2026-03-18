@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Home Inn & Suites</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      background: #0d0a0f;
+      color: #f0e9da;
+      line-height: 1.7;
+    }
+
+    /* ── Palette ── */
+    :root {
+      --gold:    #c9a84c;
+      --gold-lt: #e8c97a;
+      --plum:    #2b1a2e;
+      --deep:    #0d0a0f;
+      --mid:     #1a1020;
+      --cream:   #f0e9da;
+      --muted:   #a89580;
+    }
+
+    /* ── Nav ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 6%;
+      background: rgba(13,10,15,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+    }
+    .nav-logo {
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+      text-transform: uppercase;
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--cream); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-book {
+      background: var(--gold);
+      color: #1a1020 !important;
+      padding: 10px 24px;
+      border-radius: 2px;
+      font-weight: bold;
+    }
+    .nav-book:hover { background: var(--gold-lt) !important; color: #1a1020 !important; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 120px 20px 80px;
+      background:
+        linear-gradient(to bottom, rgba(13,10,15,0.55) 0%, rgba(43,26,46,0.7) 60%, rgba(13,10,15,1) 100%),
+        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1800&auto=format&fit=crop') center/cover no-repeat;
+    }
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      color: var(--cream);
+      letter-spacing: 4px;
+      line-height: 1.1;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .hero h1 em { color: var(--gold); font-style: normal; }
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin: 18px auto 40px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 16px 44px;
+      background: var(--gold);
+      color: var(--deep);
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 2px;
+      transition: background 0.3s, transform 0.2s;
+      cursor: pointer;
+    }
+    .btn:hover { background: var(--gold-lt); transform: translateY(-2px); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      margin-left: 16px;
+    }
+    .btn-outline:hover { background: var(--gold); color: var(--deep); }
+
+    /* ── Section base ── */
+    section { padding: 100px 6%; }
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      color: var(--cream);
+      margin-bottom: 18px;
+    }
+    .section-rule {
+      width: 60px; height: 2px;
+      background: var(--gold);
+      margin-bottom: 30px;
+    }
+    .section-body {
+      color: var(--muted);
+      max-width: 600px;
+      font-size: 1rem;
+    }
+
+    /* ── Quick Stats Bar ── */
+    .stats-bar {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 0;
+      background: var(--plum);
+      border-top: 1px solid rgba(201,168,76,0.2);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding: 0;
+    }
+    .stat {
+      flex: 1; min-width: 160px;
+      padding: 36px 24px;
+      text-align: center;
+      border-right: 1px solid rgba(201,168,76,0.15);
+    }
+    .stat:last-child { border-right: none; }
+    .stat-num {
+      font-size: 2.4rem;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .stat-lbl {
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ── Gallery ── */
+    #gallery { background: var(--mid); }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: 260px 260px;
+      gap: 12px;
+      margin-top: 48px;
+    }
+    .gallery-item {
+      overflow: hidden;
+      border-radius: 3px;
+      position: relative;
+      cursor: pointer;
+    }
+    .gallery-item:first-child {
+      grid-row: 1 / 3;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.4s;
+      filter: brightness(0.85);
+    }
+    .gallery-item:hover img {
+      transform: scale(1.07);
+      filter: brightness(1);
+    }
+    .gallery-item .overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(43,26,46,0.65) 0%, transparent 60%);
+      opacity: 0; transition: opacity 0.4s;
+      display: flex; align-items: flex-end; padding: 20px;
+    }
+    .gallery-item:hover .overlay { opacity: 1; }
+    .overlay-txt {
+      font-size: 0.8rem; letter-spacing: 2px;
+      text-transform: uppercase; color: var(--gold);
+    }
+
+    /* ── Amenities ── */
+    #amenities { background: var(--deep); }
+    .amenities-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 32px;
+      margin-top: 56px;
+    }
+    .amenity-card {
+      background: var(--plum);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 4px;
+      padding: 40px 32px;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .amenity-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-4px);
+    }
+    .amenity-icon {
+      font-size: 2.4rem;
+      margin-bottom: 18px;
+      display: block;
+    }
+    .amenity-title {
+      font-size: 1.05rem;
+      color: var(--cream);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .amenity-desc { font-size: 0.9rem; color: var(--muted); }
+
+    /* ── Rooms ── */
+    #rooms { background: var(--mid); }
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 28px;
+      margin-top: 56px;
+    }
+    .room-card {
+      background: var(--plum);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.12);
+      transition: border-color 0.3s;
+    }
+    .room-card:hover { border-color: var(--gold); }
+    .room-card img {
+      width: 100%; height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s;
+    }
+    .room-card:hover img { transform: scale(1.04); }
+    .room-img-wrap { overflow: hidden; }
+    .room-body { padding: 28px; }
+    .room-type {
+      font-size: 0.7rem; letter-spacing: 3px;
+      text-transform: uppercase; color: var(--gold);
+      margin-bottom: 8px;
+    }
+    .room-name {
+      font-size: 1.3rem; color: var(--cream); margin-bottom: 12px;
+    }
+    .room-desc { font-size: 0.88rem; color: var(--muted); margin-bottom: 20px; }
+    .room-footer {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .room-price { color: var(--gold); font-size: 1.2rem; }
+    .room-price span { font-size: 0.75rem; color: var(--muted); }
+    .btn-sm {
+      padding: 10px 22px;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+    }
+
+    /* ── Area ── */
+    #area {
+      background:
+        linear-gradient(to right, rgba(13,10,15,0.94) 45%, rgba(13,10,15,0.6) 100%),
+        url('https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1600&auto=format&fit=crop') right/cover no-repeat;
+    }
+    .area-inner { max-width: 560px; }
+    .area-list { margin-top: 24px; list-style: none; }
+    .area-list li {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    .area-list li:last-child { border-bottom: none; }
+    .area-list .dot {
+      width: 8px; height: 8px;
+      min-width: 8px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin-top: 8px;
+    }
+    .area-list strong { color: var(--cream); display: block; }
+
+    /* ── Booking ── */
+    #booking { background: var(--plum); }
+    .booking-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    form { margin-top: 40px; }
+    .form-group { margin-bottom: 24px; }
+    label {
+      display: block;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+    input, select, textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: var(--cream);
+      padding: 14px 18px;
+      border-radius: 3px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+    }
+    select option { background: #2b1a2e; }
+    textarea { resize: vertical; min-height: 110px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .form-submit { margin-top: 10px; }
+    .form-submit .btn { width: 100%; text-align: center; border: none; font-family: inherit; font-size: 0.85rem; }
+
+    .contact-info { margin-top: 48px; }
+    .ci-item {
+      display: flex; gap: 16px; margin-bottom: 28px; align-items: flex-start;
+    }
+    .ci-icon { font-size: 1.6rem; min-width: 36px; }
+    .ci-lbl { font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+    .ci-val { color: var(--cream); font-size: 0.95rem; }
+
+    /* ── ASI WebRes Booking Engine ── */
+    #engine { background: var(--deep); }
+    .engine-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 24px; margin-bottom: 48px;
+    }
+    .engine-header-text { max-width: 560px; }
+    .engine-badge {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--plum);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 4px;
+      padding: 14px 22px;
+      font-size: 0.8rem;
+      color: var(--gold);
+      letter-spacing: 1px;
+      white-space: nowrap;
+      align-self: flex-start;
+    }
+    .engine-badge span { font-size: 1.4rem; }
+
+    /* Iframe container */
+    .engine-frame-wrap {
+      width: 100%;
+      background: var(--plum);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 6px;
+      overflow: hidden;
+      position: relative;
+    }
+    .engine-frame-wrap iframe {
+      width: 100%;
+      min-height: 680px;
+      border: none;
+      display: block;
+    }
+
+    /* Placeholder shown when no iframe URL is set */
+    .engine-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 360px;
+      padding: 60px 40px;
+      text-align: center;
+      gap: 18px;
+    }
+    .engine-placeholder .ph-icon { font-size: 3rem; }
+    .engine-placeholder h3 { font-size: 1.3rem; color: var(--cream); }
+    .engine-placeholder p { color: var(--muted); font-size: 0.92rem; max-width: 480px; }
+    .ph-steps {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 16px;
+      margin-top: 10px;
+    }
+    .ph-step {
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 4px;
+      padding: 14px 20px;
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-align: left;
+      max-width: 200px;
+    }
+    .ph-step strong { display: block; color: var(--gold); margin-bottom: 4px; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
+    .engine-cta {
+      display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+      margin-top: 32px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--deep);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      padding: 60px 6% 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+    .footer-brand { font-size: 1.2rem; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 16px; }
+    .footer-tagline { color: var(--muted); font-size: 0.9rem; max-width: 300px; }
+    .footer-heading { font-size: 0.75rem; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 18px; }
+    .footer-links { list-style: none; }
+    .footer-links li { margin-bottom: 10px; }
+    .footer-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; transition: color 0.3s; }
+    .footer-links a:hover { color: var(--gold); }
+    .footer-bar {
+      border-top: 1px solid rgba(201,168,76,0.1);
+      padding-top: 24px;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-copy { color: var(--muted); font-size: 0.82rem; }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(0,0,0,0.92);
+      align-items: center; justify-content: center;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img { max-width: 90vw; max-height: 85vh; border-radius: 4px; object-fit: contain; }
+    .lightbox-close {
+      position: fixed; top: 24px; right: 32px;
+      font-size: 2rem; color: var(--gold); cursor: pointer; line-height: 1;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .gallery-grid { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+      .gallery-item:first-child { grid-row: auto; }
+      .booking-inner { grid-template-columns: 1fr; gap: 40px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      nav .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      section { padding: 72px 5%; }
+      .gallery-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a class="nav-logo" href="#"><span>Home</span> Inn &amp; Suites</a>
+  <ul class="nav-links">
+    <li><a href="#gallery">Gallery</a></li>
+    <li><a href="#amenities">Amenities</a></li>
+    <li><a href="#rooms">Rooms</a></li>
+    <li><a href="#area">Explore</a></li>
+    <li><a href="#engine">Book Online</a></li>
+    <li><a class="nav-book" href="#engine">Reserve</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <p class="hero-eyebrow">Welcome to</p>
+  <h1>Home Inn<br/>&amp; <em>Suites</em></h1>
+  <p class="hero-sub">Where every stay feels like coming home — without sacrificing a moment of luxury.</p>
+  <div>
+    <a class="btn" href="#engine">Reserve Your Stay</a>
+    <a class="btn btn-outline" href="#gallery">View Gallery</a>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<div class="stats-bar">
+  <div class="stat"><span class="stat-num">48</span><span class="stat-lbl">Elegant Rooms</span></div>
+  <div class="stat"><span class="stat-num">4.9★</span><span class="stat-lbl">Guest Rating</span></div>
+  <div class="stat"><span class="stat-num">12+</span><span class="stat-lbl">Amenities</span></div>
+  <div class="stat"><span class="stat-num">24/7</span><span class="stat-lbl">Concierge Service</span></div>
+</div>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <p class="section-label">A Visual Journey</p>
+  <h2 class="section-title">Our Property</h2>
+  <div class="section-rule"></div>
+  <p class="section-body">Step inside a world of warmth and sophistication. Every corner of Home Inn &amp; Suites has been crafted to delight.</p>
+
+  <div class="gallery-grid">
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=800&auto=format&fit=crop" alt="Luxury Suite" />
+      <div class="overlay"><span class="overlay-txt">Presidential Suite</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="https://images.unsplash.com/photo-1584132967334-10e028bd69f7?w=800&auto=format&fit=crop" alt="Pool" />
+      <div class="overlay"><span class="overlay-txt">Infinity Pool</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&auto=format&fit=crop" alt="Restaurant" />
+      <div class="overlay"><span class="overlay-txt">Fine Dining</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=800&auto=format&fit=crop" alt="Lobby" />
+      <div class="overlay"><span class="overlay-txt">Grand Lobby</span></div>
+    </div>
+    <div class="gallery-item" onclick="openLightbox(this)">
+      <img src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?w=800&auto=format&fit=crop" alt="Spa" />
+      <div class="overlay"><span class="overlay-txt">Spa &amp; Wellness</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AMENITIES ── -->
+<section id="amenities">
+  <p class="section-label">What We Offer</p>
+  <h2 class="section-title">World-Class Amenities</h2>
+  <div class="section-rule"></div>
+  <p class="section-body">Everything you need for a perfect stay — and a few luxuries you didn't know you needed.</p>
+
+  <div class="amenities-grid">
+    <div class="amenity-card">
+      <span class="amenity-icon">🏊</span>
+      <p class="amenity-title">Infinity Pool</p>
+      <p class="amenity-desc">Relax in our heated outdoor infinity pool, open year-round with stunning views and poolside service.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">🧖</span>
+      <p class="amenity-title">Spa &amp; Wellness</p>
+      <p class="amenity-desc">Rejuvenate with our full-service spa featuring massages, facials, sauna, and steam rooms.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">🍽️</span>
+      <p class="amenity-title">On-Site Restaurant</p>
+      <p class="amenity-desc">Award-winning cuisine served for breakfast, lunch, and dinner. Room service available 24 hours.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">💪</span>
+      <p class="amenity-title">Fitness Center</p>
+      <p class="amenity-desc">State-of-the-art equipment, personal training sessions, and daily fitness classes available.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">🚗</span>
+      <p class="amenity-title">Valet Parking</p>
+      <p class="amenity-desc">Complimentary valet parking for all guests, with secure covered garage facilities on site.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">📶</span>
+      <p class="amenity-title">High-Speed Wi-Fi</p>
+      <p class="amenity-desc">Blazing-fast Wi-Fi throughout all rooms and common areas — perfect for business or streaming.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">🧳</span>
+      <p class="amenity-title">Concierge Service</p>
+      <p class="amenity-desc">Our expert concierge team is available around the clock to assist with tours, reservations, and more.</p>
+    </div>
+    <div class="amenity-card">
+      <span class="amenity-icon">🍳</span>
+      <p class="amenity-title">Complimentary Breakfast</p>
+      <p class="amenity-desc">Start every morning right with our complimentary hot breakfast buffet — included with every stay.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ROOMS ── -->
+<section id="rooms">
+  <p class="section-label">Accommodations</p>
+  <h2 class="section-title">Our Rooms &amp; Suites</h2>
+  <div class="section-rule"></div>
+  <p class="section-body">Each room is thoughtfully designed with premium bedding, smart technology, and refined décor.</p>
+
+  <div class="rooms-grid">
+    <div class="room-card">
+      <div class="room-img-wrap">
+        <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=700&auto=format&fit=crop" alt="Deluxe King Room" />
+      </div>
+      <div class="room-body">
+        <p class="room-type">Standard</p>
+        <h3 class="room-name">Deluxe King Room</h3>
+        <p class="room-desc">Spacious king room with plush bedding, a seating area, flat-screen TV, and en-suite marble bathroom.</p>
+        <div class="room-footer">
+          <div class="room-price">$149 <span>/ night</span></div>
+          <a class="btn btn-sm" href="#booking">Book</a>
+        </div>
+      </div>
+    </div>
+    <div class="room-card">
+      <div class="room-img-wrap">
+        <img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461?w=700&auto=format&fit=crop" alt="Junior Suite" />
+      </div>
+      <div class="room-body">
+        <p class="room-type">Suite</p>
+        <h3 class="room-name">Junior Suite</h3>
+        <p class="room-desc">A spacious suite with a separate living area, Nespresso machine, premium toiletries, and city views.</p>
+        <div class="room-footer">
+          <div class="room-price">$229 <span>/ night</span></div>
+          <a class="btn btn-sm" href="#booking">Book</a>
+        </div>
+      </div>
+    </div>
+    <div class="room-card">
+      <div class="room-img-wrap">
+        <img src="https://images.unsplash.com/photo-1591088398332-8a7791972843?w=700&auto=format&fit=crop" alt="Presidential Suite" />
+      </div>
+      <div class="room-body">
+        <p class="room-type">Signature</p>
+        <h3 class="room-name">Presidential Suite</h3>
+        <p class="room-desc">The pinnacle of luxury — two bedrooms, a grand living room, private terrace, jacuzzi, and butler service.</p>
+        <div class="room-footer">
+          <div class="room-price">$549 <span>/ night</span></div>
+          <a class="btn btn-sm" href="#booking">Book</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── AREA ── -->
+<section id="area">
+  <div class="area-inner">
+    <p class="section-label">Explore the Area</p>
+    <h2 class="section-title">Discover What's Nearby</h2>
+    <div class="section-rule"></div>
+    <p class="section-body">Home Inn &amp; Suites is perfectly situated to put the best local attractions right at your doorstep.</p>
+
+    <ul class="area-list">
+      <li>
+        <span class="dot"></span>
+        <div><strong>Downtown District</strong>0.5 miles — Boutique shops, cafés, live music venues, and award-winning restaurants.</div>
+      </li>
+      <li>
+        <span class="dot"></span>
+        <div><strong>Historic Landmarks</strong>1.2 miles — Explore the city's rich history through museums, galleries, and guided tours.</div>
+      </li>
+      <li>
+        <span class="dot"></span>
+        <div><strong>Nature &amp; Parks</strong>2 miles — Scenic trails, lakefront parks, and outdoor recreation just minutes away.</div>
+      </li>
+      <li>
+        <span class="dot"></span>
+        <div><strong>Convention Center</strong>0.8 miles — Ideal for business travelers attending events and conferences.</div>
+      </li>
+      <li>
+        <span class="dot"></span>
+        <div><strong>International Airport</strong>12 miles — Easy access via our complimentary shuttle service (advance booking required).</div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- ── ASI WEBRES BOOKING ENGINE ── -->
+<section id="engine">
+  <div class="engine-header">
+    <div class="engine-header-text">
+      <p class="section-label">Online Reservations</p>
+      <h2 class="section-title">Book Your Stay</h2>
+      <div class="section-rule"></div>
+      <p class="section-body">Reserve directly through our secure booking engine, powered by <strong style="color:var(--gold)">ASI WebRes</strong> by Anand Systems — commission-free, real-time availability, instant confirmation.</p>
+    </div>
+    <div class="engine-badge">
+      <span>🔒</span> Secure · Commission-Free · Powered by ASI WebRes
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       OPTION A — IFRAME EMBED
+       Replace the src below with your ASI WebRes property URL,
+       e.g. src="https://bookings.anandsystems.com/your-property-id"
+       Once set, delete the .engine-placeholder div below.
+  ════════════════════════════════════════════════════════════════ -->
+  <div class="engine-frame-wrap" id="engineWrap">
+
+    <!-- ── PLACEHOLDER (remove once you have your ASI WebRes URL) ── -->
+    <div class="engine-placeholder" id="enginePlaceholder">
+      <div class="ph-icon">🏨</div>
+      <h3>ASI WebRes Booking Engine</h3>
+      <p>Your Anand Systems booking engine will appear here. Follow the steps below to activate it, or use the button to open it in a new tab.</p>
+
+      <div class="ph-steps">
+        <div class="ph-step">
+          <strong>Step 1</strong>
+          Contact Anand Systems to get your ASI WebRes property URL or iframe embed code.
+        </div>
+        <div class="ph-step">
+          <strong>Step 2</strong>
+          Open this HTML file and find the comment labeled <em>"OPTION A"</em>.
+        </div>
+        <div class="ph-step">
+          <strong>Step 3</strong>
+          Replace the iframe <code style="color:var(--gold)">src</code> with your WebRes URL and remove this placeholder block.
+        </div>
+      </div>
+
+      <div class="engine-cta">
+        <!-- OPTION B — Direct link: replace # with your ASI WebRes booking page URL -->
+        <a class="btn" href="#" target="_blank" id="bookNowBtn">
+          Book Now via ASI WebRes ↗
+        </a>
+        <a class="btn btn-outline" href="tel:+15558004663">Call to Reserve</a>
+      </div>
+    </div>
+
+    <!-- ── UNCOMMENT AND FILL IN when you have your ASI WebRes URL ──
+    <iframe
+      src="YOUR_ASI_WEBRES_URL_HERE"
+      title="Home Inn & Suites — Online Booking"
+      allowpaymentrequest
+      loading="lazy">
+    </iframe>
+    ── END IFRAME ── -->
+
+  </div>
+
+  <!-- Trust badges -->
+  <div style="display:flex; gap:32px; flex-wrap:wrap; margin-top:32px; justify-content:center;">
+    <div style="text-align:center; color:var(--muted); font-size:0.82rem;">
+      <div style="font-size:1.8rem; margin-bottom:6px;">🔐</div>
+      SSL Encrypted
+    </div>
+    <div style="text-align:center; color:var(--muted); font-size:0.82rem;">
+      <div style="font-size:1.8rem; margin-bottom:6px;">💳</div>
+      Secure Payments
+    </div>
+    <div style="text-align:center; color:var(--muted); font-size:0.82rem;">
+      <div style="font-size:1.8rem; margin-bottom:6px;">✅</div>
+      Instant Confirmation
+    </div>
+    <div style="text-align:center; color:var(--muted); font-size:0.82rem;">
+      <div style="font-size:1.8rem; margin-bottom:6px;">💰</div>
+      Best Rate Guaranteed
+    </div>
+    <div style="text-align:center; color:var(--muted); font-size:0.82rem;">
+      <div style="font-size:1.8rem; margin-bottom:6px;">🚫</div>
+      No Hidden Fees
+    </div>
+  </div>
+</section>
+
+<!-- ── BOOKING ── -->
+<section id="booking">
+  <div class="booking-inner">
+    <div>
+      <p class="section-label">Reserve Your Stay</p>
+      <h2 class="section-title">Book Directly &amp; Save</h2>
+      <div class="section-rule"></div>
+      <p class="section-body">Enjoy the best available rates when you book directly with us. Our team will confirm your reservation within 24 hours.</p>
+
+      <div class="contact-info" style="margin-top: 40px;">
+        <div class="ci-item">
+          <span class="ci-icon">📞</span>
+          <div><p class="ci-lbl">Phone</p><p class="ci-val">+1 (555) 800-HOME</p></div>
+        </div>
+        <div class="ci-item">
+          <span class="ci-icon">✉️</span>
+          <div><p class="ci-lbl">Email</p><p class="ci-val">reservations@homeinnsuites.com</p></div>
+        </div>
+        <div class="ci-item">
+          <span class="ci-icon">📍</span>
+          <div><p class="ci-lbl">Address</p><p class="ci-val">123 Grand Boulevard, Suite Floor<br/>Your City, ST 00000</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <form onsubmit="submitForm(event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" id="fname" placeholder="Jane" required />
+          </div>
+          <div class="form-group">
+            <label for="lname">Last Name</label>
+            <input type="text" id="lname" placeholder="Smith" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" placeholder="jane@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" placeholder="+1 (555) 000-0000" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="checkin">Check-In Date</label>
+            <input type="date" id="checkin" required />
+          </div>
+          <div class="form-group">
+            <label for="checkout">Check-Out Date</label>
+            <input type="date" id="checkout" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="room">Room Type</label>
+          <select id="room">
+            <option value="">Select a room…</option>
+            <option>Deluxe King Room — $149/night</option>
+            <option>Junior Suite — $229/night</option>
+            <option>Presidential Suite — $549/night</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="guests">Number of Guests</label>
+          <select id="guests">
+            <option>1 Guest</option>
+            <option>2 Guests</option>
+            <option>3 Guests</option>
+            <option>4+ Guests</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="notes">Special Requests</label>
+          <textarea id="notes" placeholder="Early check-in, accessibility needs, celebrations…"></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" class="btn">Request Reservation</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <p class="footer-brand">Home Inn &amp; Suites</p>
+      <p class="footer-tagline">Where every stay feels like coming home. Luxury, comfort, and warmth — all under one roof.</p>
+    </div>
+    <div>
+      <p class="footer-heading">Quick Links</p>
+      <ul class="footer-links">
+        <li><a href="#gallery">Gallery</a></li>
+        <li><a href="#amenities">Amenities</a></li>
+        <li><a href="#rooms">Rooms &amp; Suites</a></li>
+        <li><a href="#area">Explore the Area</a></li>
+        <li><a href="#booking">Book Now</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">Policies</p>
+      <ul class="footer-links">
+        <li><a href="#">Check-in: 3:00 PM</a></li>
+        <li><a href="#">Check-out: 11:00 AM</a></li>
+        <li><a href="#">Cancellation Policy</a></li>
+        <li><a href="#">Pet Policy</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <p class="footer-copy">© 2026 Home Inn &amp; Suites. All rights reserved.</p>
+    <p class="footer-copy">Designed with care for our guests.</p>
+  </div>
+</footer>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox()">
+  <span class="lightbox-close" onclick="closeLightbox()">✕</span>
+  <img id="lightbox-img" src="" alt="Gallery" />
+</div>
+
+<script>
+  // Lightbox
+  function openLightbox(el) {
+    const src = el.querySelector('img').src;
+    document.getElementById('lightbox-img').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
+
+  // Form submission
+  function submitForm(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button[type=submit]');
+    btn.textContent = '✓ Request Sent!';
+    btn.style.background = '#4a7c59';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = 'Request Reservation';
+      btn.style.background = '';
+      btn.disabled = false;
+      e.target.reset();
+    }, 3500);
+  }
+
+  // Set min date for date inputs to today
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('checkin').min = today;
+  document.getElementById('checkout').min = today;
+  document.getElementById('checkin').addEventListener('change', function() {
+    document.getElementById('checkout').min = this.value;
+  });
+</script>
+
+</body>
+</html>
